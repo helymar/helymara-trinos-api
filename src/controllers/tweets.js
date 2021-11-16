@@ -1,7 +1,6 @@
 const ApiError = require('../utils/ApiError');
 
 const { Tweets, User, Coments } = require('../database/models');
-const { generateAccessToken } = require('../services/jwt');
 
 const TweetSerializer = require('../serializers/TweetSerializer');
 const ComentsSerializer = require('../serializers/ComentsSerializer');
