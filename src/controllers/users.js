@@ -1,3 +1,4 @@
+const { v4: uuid } = require('uuid');
 const ApiError = require('../utils/ApiError');
 
 const { User } = require('../database/models');
@@ -6,9 +7,7 @@ const { generateAccessToken } = require('../services/jwt');
 const UserSerializer = require('../serializers/UserSerializer');
 const AuthSerializer = require('../serializers/AuthSerializer');
 const UsersSerializer = require('../serializers/UsersSerializer');
-const { v4: uuid } = require('uuid');
 const transporter = require('../lib/nodemailer');
-
 
 const { ROLES } = require('../config/constants');
 
@@ -148,10 +147,10 @@ const updatepassword = async (req, res, next) => {
       throw new ApiError('Passwords do not match', 400);
     }
 
-    const user = await findUser({id: req.user.id });
+    const user = await findUser({ id: req.user.id });
 
     const userPayload = {
-      password: body.password
+      password: body.password,
     };
 
     if (Object.values(userPayload).some((val) => val === undefined)) {
@@ -176,17 +175,13 @@ const sendpassword = async (req, res, next) => {
       throw new ApiError('Bad request', 400);
     }
 
-    const user = await findUser({username: body.username });
+    const user = await findUser({ username: body.username });
 
     const userEmail = user.dataValues.email;
 
-    const token = uuid();
-
     const userPayload = {
-      token: token
+      token: uuid(),
     };
-
-    console.log(userEmail);
 
     Object.assign(user, userPayload);
 
@@ -195,15 +190,14 @@ const sendpassword = async (req, res, next) => {
     const info = await transporter.sendMail({
       from: '"Trinos-API" <helymara@uninorte.edu.co>', // sender address
       to: userEmail, // list of receivers
-      subject: "Solicitud de restablecimiento de contraseña", // Subject line
+      subject: 'Solicitud de restablecimiento de contraseña', // Subject line
       html: `<b>Hola,</b>
-          <p>Se solicito el restablecimiento de su contraseña el token es: </p>
-          <br>${token}</br>
-          <p>En caso de que usted no haya solicitado este cambio contacte a soporte</p>
-          <p>Atentamente, <br>
-          Trinos-API</p>`, // html body
-    })
-   
+        <p>Se solicito el restablecimiento de su contraseña el token es: </p>
+        <br>${userPayload.token}</br>
+        <p>En caso de que usted no haya solicitado este cambio contacte a soporte</p>
+        <p>Atentamente, <br>  
+        Trinos-API</p>`, // html body
+    });
 
     res.json(new UserSerializer(null));
   } catch (err) {
@@ -219,17 +213,16 @@ const resetpassword = async (req, res, next) => {
       throw new ApiError('Passwords do not match', 400);
     }
 
-    const user = await findUser({token: body.token });
+    const user = await findUser({ token: body.token });
 
     const userPayload = {
       password: body.password,
-      token:null,
+      token: null,
     };
 
     if (Object.values(userPayload).some((val) => val === undefined)) {
       throw new ApiError('Payload can only contain password and passwordConfirmation', 400);
     }
-    
 
     Object.assign(user, userPayload);
 
