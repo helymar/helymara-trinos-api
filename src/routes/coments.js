@@ -27,7 +27,7 @@ router.delete('/:id', authMiddleware, deleteTweetById);
 
 router.post('/:id/likes', authMiddleware, TweetLike);
 
-router.post('/:id/comments', authMiddleware, createComents);
+router.post('/:id/coments', authMiddleware, createComents);
 
 router.get('/feed/:username', paginationMiddleware, getFeedUsername);
 

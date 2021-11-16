@@ -21,7 +21,7 @@ const findTweet = async (where) => {
 const findcoments = async (where) => {
   Object.assign(where);
 
-  const comments = await Coments.findAll({ where });
+  const comments = await Coments.findOne({ where });
   if (!comments) {
     return [];
   }
@@ -161,11 +161,11 @@ const getFeedUsername = async (req, res, next) => {
       userId: user.id,
     };
     const myTweets = await Tweets.findAll({ where, ...req.pagination });
-    /* eslint-disable no-await-in-loop */
+
     for (let index = 0; index < myTweets.length; index += 1) {
-      const comments = await findcoments({ tweetId: myTweets[index].dataValues.id });
+      const comments = findcoments({ tweetId: myTweets[index].dataValues.id });
       myTweets[index].dataValues.comments = comments;
-    }/* eslint-enable no-await-in-loop */
+    }
     res.json(new TweetsSerializer(myTweets, await req.getPaginationInfo(Tweets)));
   } catch (err) {
     next(err);

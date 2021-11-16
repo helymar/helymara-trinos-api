@@ -2,7 +2,7 @@ const express = require('express');
 
 const ErrorSerializer = require('./src/serializers/BaseSerializer');
 const usersRouter = require('./src/routes/users');
-
+const comentsRouter = require('./src/routes/coments');
 const tweetsRouter = require('./src/routes/tweets');
 
 const app = express();
@@ -12,6 +12,7 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/users', usersRouter);
 app.use('/tweets', tweetsRouter);
+app.use('/comments', comentsRouter);
 
 app.use((req, res, next) => {
   res.status(404);
