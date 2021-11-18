@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Tweets.associate = function(models) {
     Tweets.belongsTo(models.User, {foreignKey: 'userId', as: 'user'})
-    Tweets.hasMany(models.Comments, {foreignKey: 'tweetId', as: 'comments'})
+    Tweets.hasMany(models.Comments, {foreignKey: 'tweetId', as: 'comments', onDelete: 'cascade'})
   };
   return Tweets;
 };
