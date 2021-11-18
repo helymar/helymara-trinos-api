@@ -1,3 +1,4 @@
+const { ROLES } = require('../../config/constants');
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Users', {
@@ -32,6 +33,11 @@ module.exports = {
       },
       active: {
         type: Sequelize.BOOLEAN,
+      },
+      role: {
+        type: Sequelize.ENUM,
+        values: Object.values(ROLES),
+        defaultValue: ROLES.regular,
       },
       createdAt: {
         allowNull: false,
