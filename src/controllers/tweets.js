@@ -159,12 +159,7 @@ const getFeedUsername = async (req, res, next) => {
     const where = {
       userId: user.id,
     };
-    const myTweets = await Tweets.findAll({ where, ...req.pagination });
-    /* eslint-disable no-await-in-loop */
-    for (let index = 0; index < myTweets.length; index += 1) {
-      const comments = await findcoments({ tweetId: myTweets[index].dataValues.id });
-      myTweets[index].dataValues.comments = comments;
-    }/* eslint-enable no-await-in-loop */
+    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Comments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'comments' }] });
     res.json(new TweetsSerializer(myTweets, await req.getPaginationInfo(Tweets)));
   } catch (err) {
     next(err);
