@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Tweets.associate = function(models) {
     Tweets.belongsTo(models.User, {foreignKey: 'userId', as: 'user'})
-    Tweets.hasMany(models.Comments, {foreignKey: 'tweetId', as: 'coments'})
+    Tweets.hasMany(models.Comments, {foreignKey: 'tweetId', as: 'comments'})
   };
   return Tweets;
 };
