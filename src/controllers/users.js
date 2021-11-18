@@ -130,6 +130,17 @@ const loginUser = async (req, res, next) => {
     if (!(await user.comparePassword(body.password))) {
       throw new ApiError('User not found', 400);
     }
+    const userPayload = {
+      lastLoginDate: new Date(),
+    };
+
+    if (Object.values(userPayload).some((val) => val === undefined)) {
+      throw new ApiError('Payload can only contain username, email or name', 400);
+    }
+
+    Object.assign(user, userPayload);
+
+    await user.save();
 
     const accessToken = generateAccessToken(user.id, user.role);
 
