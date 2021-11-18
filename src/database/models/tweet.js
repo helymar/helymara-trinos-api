@@ -40,6 +40,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Tweets',
   });
-  
+  Tweets.associate = function(models) {
+    Tweets.belongsTo(models.User, {foreignKey: 'userId', as: 'user'})
+  };
   return Tweets;
 };
