@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
   });
   Coments.associate = function(models) {
     Coments.belongsTo(models.Tweets, {foreignKey: 'tweetId', as: 'tweet'})
+    Coments.hasOne(models.Tweets, {foreignKey: 'tweetId', as: 'tweet'})
   };
   return Coments;
 };
