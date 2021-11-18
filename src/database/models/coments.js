@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Coments',
   });
   Coments.associate = function(models) {
-    Coments.belongsTo(models.User, {foreignKey: 'tweetId', as: 'tweet'})
+    Coments.belongsTo(models.Tweets, {foreignKey: 'tweetId', as: 'tweet'})
   };
   return Coments;
 };
