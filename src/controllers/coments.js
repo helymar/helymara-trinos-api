@@ -1,13 +1,13 @@
 const ApiError = require('../utils/ApiError');
 
-const { Coments } = require('../database/models');
+const { Comments } = require('../database/models');
 
 const ComentsSerializer = require('../serializers/ComentsSerializer');
 
 const findcoments = async (where) => {
   Object.assign(where);
 
-  const comments = await Coments.findOne({ where });
+  const comments = await Comments.findOne({ where });
   if (!comments) {
     return [];
   }
@@ -21,7 +21,7 @@ const deleteCommentsById = async (req, res, next) => {
     const tweetId = Number(params.id);
     const mycomment = await findcoments({ id: tweetId });
     if (mycomment.length !== 0) {
-      const comments = await Coments.destroy({ where: { id: tweetId } });
+      const comments = await Comments.destroy({ where: { id: tweetId } });
       res.json(new ComentsSerializer(null));
     } else {
       throw new ApiError('Comments not found', 404);

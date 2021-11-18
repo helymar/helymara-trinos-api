@@ -1,6 +1,6 @@
 const ApiError = require('../utils/ApiError');
 
-const { Tweets, User, Coments } = require('../database/models');
+const { Tweets, User, Comments } = require('../database/models');
 
 const TweetSerializer = require('../serializers/TweetSerializer');
 const ComentsSerializer = require('../serializers/ComentsSerializer');
@@ -20,7 +20,7 @@ const findTweet = async (where) => {
 const findcoments = async (where) => {
   Object.assign(where);
 
-  const comments = await Coments.findAll({ where });
+  const comments = await Comments.findAll({ where });
   if (!comments) {
     return [];
   }
@@ -43,7 +43,7 @@ const getAllMyTweets = async (req, res, next) => {
     const where = {
       userId: req.user.id,
     };
-    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Coments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'comments' }] });
+    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Comments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'coments' }] });
 
     res.json(new TweetsSerializer(myTweets, await req.getPaginationInfo(Tweets)));
   } catch (err) {
@@ -144,7 +144,7 @@ const createComents = async (req, res, next) => {
       throw new ApiError('Bad request', 400);
     }
 
-    const Coment = await Coments.create(tweetcomentsPayload);
+    const Coment = await Comments.create(tweetcomentsPayload);
 
     res.json(new ComentsSerializer(Coment));
   } catch (err) {

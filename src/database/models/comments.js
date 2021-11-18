@@ -4,7 +4,7 @@ const {
 } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Coments extends Model {
+  class Comments extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
 
   }
-  Coments.init({
+  Comments.init({
     text: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Coments',
   });
   Coments.associate = function(models) {
-    Coments.belongsTo(models.Tweets, {foreignKey: 'tweetId', as: 'tweet'})
+    Comments.belongsTo(models.Tweets, {foreignKey: 'tweetId', as: 'tweet'})
   };
   return Coments;
 };
