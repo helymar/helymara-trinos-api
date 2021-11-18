@@ -43,7 +43,7 @@ const getAllMyTweets = async (req, res, next) => {
     const where = {
       userId: req.user.id,
     };
-    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Coments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'Coments' }] });
+    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Coments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'comments' }] });
 
     res.json(new TweetsSerializer(myTweets, await req.getPaginationInfo(Tweets)));
   } catch (err) {
