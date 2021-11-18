@@ -69,7 +69,9 @@ module.exports = (sequelize, DataTypes) => {
       user.password = await bcrypt.hash(user.password, SALT_ROUNDS);
     }
   };
-  
+  User.associate = function(models) {
+    User.hasMany(models.Tweets, {foreignKey: 'userId', as: 'user'})
+  };
   User.beforeCreate(encryptPassword);
   User.beforeUpdate(encryptPassword);
 
