@@ -43,5 +43,5 @@ module.exports = (sequelize, DataTypes) => {
   Comments.associate = function(models) {
     Comments.belongsTo(models.Tweets, {foreignKey: 'tweetId', as: 'tweet'})
   };
-  return Coments;
+  return Comments;
 };
