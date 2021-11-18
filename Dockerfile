@@ -1,4 +1,4 @@
-FROM node:current-alpine3.12
+FROM node:fermium-buster-slim
 
 ENV NODE_ENV=production
 
