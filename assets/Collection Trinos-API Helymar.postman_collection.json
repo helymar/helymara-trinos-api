@@ -1,33 +1,3 @@
-# [Template] Tinos API - CRUD
-Student: HELYMAR FELIPE ACOSTA ESCOBAR - 200062508
-
-## Setup
-```
-npm install
-```
-
-## Run in development
-```bash
-docker-compose up
-```
-
-## Run tests
-```bash
-npm run test
-```
-
-## Run linter
-```bash
-npm run linter
-```
-## Screenshot Test
-![Screenshot Test](https://github.com/helymar/helymara-trinos-api/blob/master/assets/Tests.png)
-
-## Screenshot Linter
-![Screenshot Linter](https://github.com/helymar/helymara-trinos-api/blob/master/assets/Linter.png)
-
-## ScreeCollection Trinos-API Helymar Postman
-```json
 {
 	"info": {
 		"_postman_id": "f401d808-78fb-4c9c-9f27-174b92d157cf",
@@ -717,4 +687,3 @@ npm run linter
 		}
 	]
 }
-```
