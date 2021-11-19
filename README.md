@@ -20,3 +20,11 @@ npm run test
 ```bash
 npm run linter
 ```
+## Screenshot Test and Linter
+![Screenshot Test]
+(https://raw.githubusercontent.com/helymar/helymara-trinos-api/master/assets/Tests.png)
+```
+
+![Screenshot Linter]
+(https://raw.githubusercontent.com/helymar/helymara-trinos-api/master/assets/Linter.png)
+```
