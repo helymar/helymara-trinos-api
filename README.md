@@ -21,8 +21,6 @@ npm run test
 npm run linter
 ```
 ## Screenshot Test and Linter
-![Screenshot Test]
-(https://github.com/helymar/helymara-trinos-api/blob/master/assets/Tests.png)
+![Screenshot Test](https://github.com/helymar/helymara-trinos-api/blob/master/assets/Tests.png)
 
-![Screenshot Linter]
-(https://github.com/helymar/helymara-trinos-api/blob/master/assets/Linter.png)
+![Screenshot Linter](https://github.com/helymar/helymara-trinos-api/blob/master/assets/Linter.png)
