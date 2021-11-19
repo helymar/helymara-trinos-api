@@ -26,7 +26,7 @@ npm run linter
 ## Screenshot Linter
 ![Screenshot Linter](https://github.com/helymar/helymara-trinos-api/blob/master/assets/Linter.png)
 
-## ScreeCollection Trinos-API Helymar Postman
+## Collection Trinos-API Helymar Postman
 ```json
 {
 	"info": {
