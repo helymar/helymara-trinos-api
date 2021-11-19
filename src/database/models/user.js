@@ -47,7 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       unique: true,
     },
     lastLoginDate: {
-      type: DataTypes.BOOLEAN,
+      type: DataTypes.DATE,
       defaultValue: null,
     },
     active: {

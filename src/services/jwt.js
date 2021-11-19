@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const { JWT_SECRET } = require('../config');
 
+const blacklistData = [];
 /**
  *
  * @param {Number} id user.id
@@ -10,6 +11,20 @@ const { JWT_SECRET } = require('../config');
  */
 function generateAccessToken(id, role) {
   return jwt.sign({ id, role }, JWT_SECRET, { expiresIn: '1d' });
+}
+
+function blacklistTokenVerify(token) {
+  let sw = true;
+  for (let index = 0; index < blacklistData.length; index += 1) {
+    if (blacklistData[index] === token) {
+      sw = false;
+    }
+  }
+  return sw;
+}
+
+function blacklistTokenInser(token) {
+  blacklistData.push(token);
 }
 
 /**
@@ -24,4 +39,6 @@ function verifyAccessToken(token) {
 module.exports = {
   generateAccessToken,
   verifyAccessToken,
+  blacklistTokenVerify,
+  blacklistTokenInser,
 };

@@ -2,7 +2,7 @@ const { v4: uuid } = require('uuid');
 const ApiError = require('../utils/ApiError');
 
 const { User } = require('../database/models');
-const { generateAccessToken } = require('../services/jwt');
+const { generateAccessToken, blacklistTokenInser } = require('../services/jwt');
 
 const UserSerializer = require('../serializers/UserSerializer');
 const AuthSerializer = require('../serializers/AuthSerializer');
@@ -16,7 +16,7 @@ const findUser = async (where) => {
 
   const user = await User.findOne({ where });
   if (!user) {
-    throw new ApiError('User not found', 400);
+    throw new ApiError('User not found', 404);
   }
 
   return user;
@@ -134,10 +134,6 @@ const loginUser = async (req, res, next) => {
       lastLoginDate: new Date(),
     };
 
-    if (Object.values(userPayload).some((val) => val === undefined)) {
-      throw new ApiError('Payload can only contain username, email or name', 400);
-    }
-
     Object.assign(user, userPayload);
 
     await user.save();
@@ -154,19 +150,18 @@ const updatepassword = async (req, res, next) => {
   try {
     const { body } = req;
 
+    if (body.password === undefined || body.passwordConfirmation === undefined) {
+      throw new ApiError('Bad request', 400);
+    }
+
     if (body.password !== body.passwordConfirmation) {
       throw new ApiError('Passwords do not match', 400);
     }
-
     const user = await findUser({ id: req.user.id });
 
     const userPayload = {
       password: body.password,
     };
-
-    if (Object.values(userPayload).some((val) => val === undefined)) {
-      throw new ApiError('Payload can only contain password and passwordConfirmation', 400);
-    }
 
     Object.assign(user, userPayload);
 
@@ -220,6 +215,13 @@ const resetpassword = async (req, res, next) => {
   try {
     const { body } = req;
 
+    if (body.password === undefined || body.token === undefined) {
+      if (body.passwordConfirmation === undefined) {
+        throw new ApiError('Bad request', 400);
+      }
+      throw new ApiError('Bad request', 400);
+    }
+
     if (body.password !== body.passwordConfirmation) {
       throw new ApiError('Passwords do not match', 400);
     }
@@ -231,10 +233,6 @@ const resetpassword = async (req, res, next) => {
       token: null,
     };
 
-    if (Object.values(userPayload).some((val) => val === undefined)) {
-      throw new ApiError('Payload can only contain password and passwordConfirmation', 400);
-    }
-
     Object.assign(user, userPayload);
 
     await user.save();
@@ -243,6 +241,12 @@ const resetpassword = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+const logoutUser = async (req, res, next) => {
+  const accessToken = req.headers.authorization?.split(' ')[1];
+  blacklistTokenInser(accessToken);
+  res.json(new UserSerializer(null));
 };
 
 module.exports = {
@@ -255,4 +259,5 @@ module.exports = {
   updatepassword,
   sendpassword,
   resetpassword,
+  logoutUser,
 };

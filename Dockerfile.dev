@@ -1,10 +1,10 @@
-FROM node:fermium-buster-slim
+FROM node:current-alpine
 
 WORKDIR /usr/src/app
 
 EXPOSE 3000
 
-RUN apt update && apt install -y python make g++
+RUN apk update && apk add  --update python3 make g++
 
 COPY ./package*.json ./
 

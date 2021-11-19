@@ -39,6 +39,10 @@ const CommentsLike = async (req, res, next) => {
 
     const comments = await findcoments({ id: Idtweet });
 
+    if (comments.length === 0) {
+      throw new ApiError('Comments not found', 404);
+    }
+
     const tweetPayload = {
       likeCounter: comments.dataValues.likeCounter + 1,
     };

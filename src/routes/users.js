@@ -12,6 +12,7 @@ const {
   updatepassword,
   sendpassword,
   resetpassword,
+  logoutUser,
 } = require('../controllers/users');
 
 const { authMiddleware } = require('../middlewares/authMiddleware');
@@ -23,7 +24,9 @@ router.post('/', createUser);
 
 router.post('/login', loginUser);
 
-router.get('/:id', getUserById);
+router.post('/logout', authMiddleware, logoutUser);
+
+router.get('/:id', authMiddleware, getUserById);
 
 router.put('/:id', authMiddleware, updateUser);
 

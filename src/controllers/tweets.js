@@ -17,20 +17,10 @@ const findTweet = async (where) => {
   return tweet;
 };
 
-const findcoments = async (where) => {
-  Object.assign(where);
-
-  const comments = await Comments.findAll({ where });
-  if (!comments) {
-    return [];
-  }
-  return comments;
-};
-
 const findUser = async (where) => {
   Object.assign(where, { active: true });
 
-  const user = await User.findOne({ attributes: { exclude: ['password', 'role', 'active'] }, where });
+  const user = await User.findOne({ attributes: { exclude: ['password', 'role', 'active', 'token'] }, where });
   if (!user) {
     throw new ApiError('User not found', 404);
   }
@@ -39,16 +29,12 @@ const findUser = async (where) => {
 };
 
 const getAllMyTweets = async (req, res, next) => {
-  try {
-    const where = {
-      userId: req.user.id,
-    };
-    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Comments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'comments' }] });
+  const where = {
+    userId: req.user.id,
+  };
+  const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Comments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'comments' }] });
 
-    res.json(new TweetsSerializer(myTweets, await req.getPaginationInfo(Tweets)));
-  } catch (err) {
-    next(err);
-  }
+  res.json(new TweetsSerializer(myTweets, await req.getPaginationInfo(Tweets)));
 };
 
 const createTweet = async (req, res, next) => {
@@ -61,7 +47,7 @@ const createTweet = async (req, res, next) => {
       userId: req.user.id,
     };
     if (Object.values(tweetPayload).some((val) => val === undefined)) {
-      throw new ApiError('error', 400);
+      throw new ApiError('Bad request', 400);
     }
 
     const Tweet = await Tweets.create(tweetPayload);
@@ -92,12 +78,8 @@ const deleteTweetById = async (req, res, next) => {
     const tweetId = Number(params.id);
     const mytweet = await findTweet({ id: tweetId });
 
-    if (mytweet.dataValues.userId === req.user.id) {
-      const Tweet = await Tweets.destroy({ where: { id: tweetId } });
-      res.json(new TweetSerializer(null));
-    } else {
-      throw new ApiError('Tweet not found', 404);
-    }
+    const Tweet = await Tweets.destroy({ where: { id: tweetId } });
+    res.json(new TweetSerializer(null));
   } catch (err) {
     next(err);
   }
@@ -110,7 +92,11 @@ const TweetLike = async (req, res, next) => {
     const Idtweet = Number(params.id);
 
     const Tweetss = await findTweet({ id: Idtweet });
-    const comments = await findcoments({ tweetId: Idtweet });
+    const where = {
+      tweetId: Idtweet,
+    };
+    Object.assign(where);
+    const comments = await Comments.findAll({ where });
     const user = await findUser({ id: Tweetss.dataValues.userId });
 
     const tweetPayload = {
@@ -159,7 +145,7 @@ const getFeedUsername = async (req, res, next) => {
     const where = {
       userId: user.id,
     };
-    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: Comments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'comments' }] });
+    const myTweets = await Tweets.findAll({ where, ...req.pagination, include: [{ model: User, attributes: ['id', 'name', 'username', 'email', 'createdAt', 'updatedAt', 'lastLoginDate'], as: 'user' }, { model: Comments, attributes: ['id', 'text', 'likeCounter', 'tweetId', 'createdAt', 'updatedAt'], as: 'comments' }] });
     res.json(new TweetsSerializer(myTweets, await req.getPaginationInfo(Tweets)));
   } catch (err) {
     next(err);
